@@ -1,6 +1,6 @@
 %% Image segmentation and extraction
 %% Read Image
-imagen=imread('TUHFARZ3.jpg');
+imagen=imread('New test.jpg');
 original=imagen;
 %% Show image
 figure(1)
@@ -43,11 +43,41 @@ for n=1:size(propied,1)
 end
 hold off
 pause (1)
-%% Objects extraction
-figure (3)
-for n=1:Ne
-    [r,c] = find(L==n);
-    n1=original(min(r):max(r),min(c):max(c));
-    imshow(n1);
-    pause(0.5)
+%% Remove figures
+% for n=1:Ne
+%     [r,c] = find(L==n);
+%     
+%         
+%     
+%     n1=original(min(r):max(r),min(c):max(c));
+%     imshow(n1);
+%     pause(0.5)
+% end
+%% Lines identification
+[linesMapr linesMapc] = size(imagenBin);
+linesmap=not(zeros(linesMapr,1));
+for r=1:linesMapr
+    for c=1:linesMapc
+        if(imagenBin(r,c)==1)
+            linesmap(r,1)=0;
+            if (r<linesMapr)
+                r=r+1;
+            end
+        end
+    end
 end
+figure (3)
+imshow(linesmap)
+
+
+%% Objects extraction
+% figure (4)
+% for n=1:Ne
+%     [r,c] = find(L==n);
+%     
+%         
+%     
+%     n1=original(min(r):max(r),min(c):max(c));
+%     imshow(n1);
+%     pause(0.5)
+% end
