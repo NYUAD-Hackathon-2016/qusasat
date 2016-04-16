@@ -1,7 +1,7 @@
 {
     "IMAGES": 
     {
-	"img1": "/images/TestImage1.png",
-	"img2": "/images/TestImage2.png"
+	"img1": "https://drive.google.com/open?id=0B1RisAia4mHwV2VkLVdSLWRrLU0",
+	"img2": "https://drive.google.com/open?id=0B1RisAia4mHwelFNNExvNEtjVk0"
     }
 }
