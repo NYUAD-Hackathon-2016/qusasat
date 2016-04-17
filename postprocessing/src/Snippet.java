@@ -17,6 +17,7 @@ public class Snippet
 	String type;
 	String tag;
 	char lastChar;
+	String niceLastChar;
 
 	List<String> words;
 	List<Snippet> snippets;
@@ -26,12 +27,8 @@ public class Snippet
 		Snippet s = new Snippet();	
 		s.words=new ArrayList<>();
 		s.readOriginal();
-
 		
-		s.snippets = new ArrayList<>();
 		s.snipetize(s.words);
-		
-	//	System.out.println("insdie main\n");
 		s.OutputFile();
 
 	}
@@ -40,15 +37,24 @@ public class Snippet
 	{
 		try
 		{
-			BufferedReader in = new BufferedReader(new FileReader("Data.txt"));
-			System.out.println("Input \n");
+			BufferedReader in = new BufferedReader(new FileReader("train.txt"));
+		
 
 			while ((str = in.readLine()) != null) {
-				System.out.println(str);
 				ar=str.split(" ");
 				for(int i=0;i<ar.length;i++)
 				{
-					words.add(ar[i]);
+					ar[i] = ar[i].replaceAll("[^\\'|>&<}AbptvjHxd*rzs$SDTZEg_fqklmnhwYyFNKaui~o]", "");
+					ar[i] = ar[i].replaceAll("'", "Q");
+					ar[i] = ar[i].replaceAll("  ", " ");
+					ar[i] = ar[i].replaceAll("   ", " ");
+					if(ar[i].length()>0)
+					{
+						words.add(ar[i]);
+
+					}
+
+
 				}
 			}
 			in.close();
@@ -60,19 +66,17 @@ public class Snippet
 
 	public void snipetize (List<String> wordList)
 	{
-		System.out.println("\nOutput\n");
+		snippets = new ArrayList<Snippet>();
 
 		for (int j = 0; j < wordList.size(); j++) 
 		{
-			String regEx = "('|\\||>|&|}|A|d|\\*|r|z|W|Y)";
-			String snipiitedWord = wordList.get(j).replaceAll(regEx, "$1 ");
+		
+			String regEx = "(Q|\\||>|&|}|A|d|\\*|r|z|W|Y)";
+			String snipittedWord = wordList.get(j).replaceAll(regEx, "$1 ");
 			
-			String splittedWords[] = snipiitedWord.split(" ");
+			String splittedWords[] = snipittedWord.split(" ");
 			
-		//	System.out.println("inside the snipetize function\n");
-			
-			System.out.println(snipiitedWord);
-
+		
 			
 			Snippet currentSnippet = null;
 			
@@ -84,30 +88,60 @@ public class Snippet
 				currentSnippet.type = "let";
 				currentSnippet.lastChar = splittedWords[i]
 						.charAt(splittedWords[i].length() - 1);
+				currentSnippet.niceLastChar=isLastCharNice(splittedWords[i]);
+
 				if (i == 0)
 					currentSnippet.tag = "B";
-				else if (i == splittedWords.length - 1)
-					currentSnippet.tag = "E";
 				else
 					currentSnippet.tag = "I";
 				
+
+				snippets.add(currentSnippet);
+				
 			}
-			snippets.add(currentSnippet);
+			
+	
 		}
 	}
+
 
 	public  void OutputFile() 
 	{
 		try 
 		{
-			BufferedWriter out = new BufferedWriter(new FileWriter("output.txt"));
+			BufferedWriter out = new BufferedWriter(new FileWriter("trainCRF.txt"));
+			
+			
 			for (int i = 0; i < snippets.size(); i++) 
 			{
-				out.write(snippets.get(i).text + "\n");
-				//System.out.println(snippets.get(i).text);
+				out.write(snippets.get(i).text+"\t"+snippets.get(i).lastChar+"\t" +snippets.get(i).niceLastChar +"\t" +snippets.get(i).tag+"\n");
 			}
+			
+			
 			out.close();
 		} catch (IOException e) {}
+	}
+	
+	/*
+	 * ****** Helper funcitons
+	 */
+	
+	public String isLastCharNice(String snippetText)
+	{
+		
+		if(snippetText.endsWith("\\")||snippetText.endsWith("|")||snippetText.endsWith(">")||
+				snippetText.endsWith("<")||snippetText.endsWith("}")||snippetText.endsWith("A")||
+				snippetText.endsWith("*")||snippetText.endsWith("r")||snippetText.endsWith("z")||
+				snippetText.endsWith("w")||snippetText.endsWith("Y"))
+		{
+			return "F";
+			
+		}
+		return "T";
+	
+		
+		
+		
 	}
 	
 }
