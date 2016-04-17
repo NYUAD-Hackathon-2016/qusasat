@@ -1,1 +1,1 @@
-This is for the image vs markation reformatting into Arabic text.
+This folder holds the files used to stitch annotated text into complete digital documents.
